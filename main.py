@@ -1,30 +1,49 @@
-# My Jarvis - Tareeka 2 - Version 1
-# Dost jaisa assistant
+# FINAL JARVIS - Imran Jutt Boss
+import os, datetime, webbrowser
+try:
+    import google.generativeai as genai
+    AI=True
+except:
+    AI=False
 
-import time
+API_KEY="YAHAN_APNI_GEMINI_API_KEY_DALO"
 
-print("--- Jarvis Online Hai Boss ---")
-print("Jarvis: Yes Boss, bolo kya kaam hai?")
+if AI and API_KEY!="YAHAN_APNI_GEMINI_API_KEY_DALO":
+    genai.configure(api_key=API_KEY)
+    model=genai.GenerativeModel('gemini-1.5-flash')
+    print("Jarvis Brain: Connected ✅")
+else:
+    model=None
+    print("Jarvis Brain: Offline Mode")
 
-# Ye pehla version hai
-# Agla version me isme Awaz (Vosk) + Dimagh (Gemini API) add karenge
+def jarvis_speak(text):
+    print(f"\nJarvis: {text}")
+    try:
+        os.system(f'termux-tts-speak "{text}"')
+    except:
+        pass
+
+def get_reply(prompt):
+    if not model:
+        return "Boss API Key dalo to main smart jawab dunga. Abhi time "+datetime.datetime.now().strftime("%I:%M %p")+" hua hai."
+    try:
+        full=f"Tum Jarvis ho, Imran ka dost AI. Roman Urdu me short funny jawab do. Q: {prompt}"
+        return model.generate_content(full).text
+    except Exception as e:
+        return f"Error: {e}"
+
+jarvis_speak("Yes Boss, Jarvis Ready hai. Bolo kya kaam hai?")
 
 while True:
-    command = input("\nAap Bolo: ")
-    
-    if "jarvis" in command.lower():
-        print("Jarvis: Ji Boss, sun raha hu, hukam karo!")
-    
-    elif "kya haal" in command.lower():
-        print("Jarvis: Ek dum mast Boss, aap sunao!")
-    
-    elif "band" in command.lower() or "exit" in command.lower():
-        print("Jarvis: Ok Boss, milte hain!")
+    user=input("\nAap Bolo: ")
+    if not user.strip(): continue
+    if "exit" in user.lower() or "band" in user.lower():
+        jarvis_speak("Ok Boss, Allah Hafiz!")
         break
-    
-    elif command.strip() == "":
+    clean=user.lower().replace("jarvis","").strip()
+    if not clean:
+        jarvis_speak("Ji Boss hukam karo?")
         continue
-        
-    else:
-        print(f"Jarvis ne suna: '{command}' - (Agla version iska jawab dega)")
-        print("Jarvis: Samajh gaya Boss, ispe kaam karunga!")
+    print("Soch raha hu...")
+    reply=get_reply(clean)
+    jarvis_speak(reply)
