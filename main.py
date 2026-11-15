@@ -6,7 +6,7 @@ try:
 except:
     AI=False
 
-API_KEY="YAHAN_APNI_GEMINI_API_KEY_DALO"
+API_KEY="AQ.Ab8RN6LfTtHFQZhXWp1XAFnZF2WZjmpgjmNZ9Zu2Frwg7qC8Xg"
 
 if AI and API_KEY!="YAHAN_APNI_GEMINI_API_KEY_DALO":
     genai.configure(api_key=API_KEY)
